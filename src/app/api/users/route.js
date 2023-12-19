@@ -49,12 +49,30 @@ export const GET=async(req,res)=>{
     //     orderBy:{id:"desc"},
     //   });
     // const result=await prisma.users.findFirst();
-    const result=await prisma.users.findMany({
-        include:{
-            customers:true
-        }
-    });
+    // const result=await prisma.users.findMany({
+    //     include:{
+    //         customers:true
+    //     }
+    // });
+  
 
+    // aggregate
+    // const result=await prisma.users.aggregate({
+    //     _count:{name:true},
+    //     _sum:{id:true},
+    //     _avg:{id:true},
+    //     _max:{id:true},
+    //     _min:{name:true}
+    // })
+    // const result=await prisma.users.groupBy({
+    //     by:["name"],
+    //     _count:{id:true}
+    // })
+    const result=await prisma.users.groupBy({
+        by:["name"],
+        _count:{name:true},
+        having:{name:"Tahsan Sharin"}
+    })
     return NextResponse.json({message:"success",data:result})
 }
 

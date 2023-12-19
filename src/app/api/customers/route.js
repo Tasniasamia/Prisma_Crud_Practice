@@ -2,7 +2,11 @@ import { PrismaClient } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 export const GET=async(req,res)=>{
-    return NextResponse.json({message:"The route is created"})
+  const prisma =new PrismaClient();
+  const engagements=await prisma.customers.aggregate({
+    _sum:{engagement:true}
+  })
+    return NextResponse.json({data:engagements})
 }
 
 export const POST=async(req,res)=>{

@@ -109,14 +109,24 @@ export const GET=async(req,res)=>{
 // return NextResponse.json({execute_time:end,data:result})
 
 
-//____transactions and rollback  (multiple operations with together)
+////____comparison Operator
+
 const prisma = new PrismaClient();
-const data = await prisma.users.findMany();
-// const deleteData = await prisma.customers.delete({
-//   where: { id: 3 }
+// const data = await prisma.users.findMany({
+//     where:{id:{lt:30}}
+// });
+// const data = await prisma.users.findMany({
+//     where:{id:{gte:30,lte:40}}
 // });
 
+// const data = await prisma.users.findMany({
+//     where:{id:{in:[30,33]}}
+// });
 
+const data = await prisma.users.findMany({
+    where:{id:{notIn:[30,33]}}
+});
+return NextResponse.json({data:data})
  
 }
 

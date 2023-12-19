@@ -3,27 +3,49 @@ import { NextResponse } from "next/server";
 //POST
 export const POST=async(req,res)=>{
     const prisma=new PrismaClient();
-    const result = await prisma.users.create({
-        data: 
-          {
-            name: "aru ",
-            email: "aru@gmail.com",
-            password: "24dfRER",
-            customers:{
-                create:{
-                    name: "aru ",
-                    product: "Body Spray",
-                    address: "Jessore",
-                    engagement: 60,  
+//     const result = await prisma.users.create({
+//         data: 
+//           {
+//             name: "aru ",
+//             email: "aru@gmail.com",
+//             password: "24dfRER",
+//             customers:{
+//                 create:{
+//                     name: "aru ",
+//                     product: "Body Spray",
+//                     address: "Jessore",
+//                     engagement: 60,  
+//                 }
+//             },
+//           }
+//       });
+// return NextResponse.json({message:"success",data:result});
+const result = await prisma.$transaction([
+    prisma.users.create({
+        data: {
+            name: "abhira",
+            email: "abhira@gmail.com",
+            password: "abhira",
+            customers: {
+                create: {
+                    name: "abhira",
+                    product: "guitter",
+                    address: "Borguna",
+                    engagement: 125
                 }
-            },
-          }
-      });
-return NextResponse.json({message:"success",data:result});
+            }
+        }
+    }),
+    prisma.customers.delete({
+        where: { id: 8 }
+    })
+]);
+  return NextResponse.json({ message: "success", data: result });
 }
 //Find
 export const GET=async(req,res)=>{
-    const prisma=new PrismaClient();
+    //_____find and findMany()
+    // const prisma=new PrismaClient();
     // const result=await prisma.users.findMany();
     // const result=await prisma.users.findMany({
     //     where:{name:{contains:"Sharin"}}
@@ -56,7 +78,7 @@ export const GET=async(req,res)=>{
     // });
   
 
-    // aggregate
+    // _____aggregate
     // const result=await prisma.users.aggregate({
     //     _count:{name:true},
     //     _sum:{id:true},
@@ -64,16 +86,38 @@ export const GET=async(req,res)=>{
     //     _max:{id:true},
     //     _min:{name:true}
     // })
+    //_______groupBy
     // const result=await prisma.users.groupBy({
     //     by:["name"],
     //     _count:{id:true}
     // })
-    const result=await prisma.users.groupBy({
-        by:["name"],
-        _count:{name:true},
-        having:{name:"Tahsan Sharin"}
-    })
-    return NextResponse.json({message:"success",data:result})
+    // const result=await prisma.users.groupBy({
+    //     by:["name"],
+    //     _count:{name:true},
+    //     having:{name:"Tahsan Sharin"}
+    // })
+
+   // return NextResponse.json({message:"success",data:result})
+
+
+    //____performance time count
+    // const prisma=new PrismaClient({log:['query','info','warn', 'error']})  //for getting log info
+// const prisma=new PrismaClient();
+// const start=Date.now();
+// const result=await prisma.users.findMany();
+// const end=Date.now()-start +" "+"miliseconds"
+// return NextResponse.json({execute_time:end,data:result})
+
+
+//____transactions and rollback  (multiple operations with together)
+const prisma = new PrismaClient();
+const data = await prisma.users.findMany();
+// const deleteData = await prisma.customers.delete({
+//   where: { id: 3 }
+// });
+
+
+ 
 }
 
 

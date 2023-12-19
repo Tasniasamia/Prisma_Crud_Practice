@@ -111,7 +111,7 @@ export const GET=async(req,res)=>{
 
 ////____comparison Operator
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 // const data = await prisma.users.findMany({
 //     where:{id:{lt:30}}
 // });
@@ -123,11 +123,23 @@ const prisma = new PrismaClient();
 //     where:{id:{in:[30,33]}}
 // });
 
-const data = await prisma.users.findMany({
-    where:{id:{notIn:[30,33]}}
-});
-return NextResponse.json({data:data})
- 
+// const data = await prisma.users.findMany({
+//     where:{id:{notIn:[30,33]}}
+// });
+// return NextResponse.json({data:data})
+
+
+//_____Logical Operator
+const prisma=new PrismaClient();
+const result=await prisma.users.findMany({
+    where:{
+        AND:[
+            {name:{contains:"aru"}},
+            {id:{notIn:[29,33]}}
+        ]
+    }
+})
+ return NextResponse.json({data:result})
 }
 
 
